@@ -6,6 +6,11 @@ const colors = {
   'grass-high': '#324822',
   rock: 'grey',
   snow: 'white',
+
+  idle: 'blue',
+  walking: 'white',
+  calculating: 'yellow',
+  turning: 'purple',
 };
 
 const canvas = document.createElement('canvas');
@@ -22,8 +27,8 @@ window.addEventListener('resize', resize);
 resize();
 
 const drawAgent = (agent) => {
-  const size = 1;
-  ctx.fillStyle = 'black';
+  const size = 0.1;
+  ctx.fillStyle = colors[agent.state];
   ctx.fillRect(
     agent.x - (size / 2),
     agent.y - (size / 2),
@@ -31,7 +36,6 @@ const drawAgent = (agent) => {
     size
   );
 };
-
 
 const drawCell = ({ x, y, type }) => {
   const drawX = x - 0.5;
@@ -52,15 +56,17 @@ export const draw = (state) => {
   ctx.fillStyle = colors['water-deep'];
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.save();
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+  ctx.scale(state.camera.zoom, state.camera.zoom);
   ctx.translate(-state.camera.x, -state.camera.y);
-  ctx.scale(Math.round(state.camera.zoom), Math.round(state.camera.zoom));
-  drawTerrain(state.terrain);
 
-  state.agents.forEach(drawAgent);
+  drawTerrain(state.world.terrain);
+  state.world.agents.forEach(drawAgent);
+
   ctx.restore();
 };
 
 export const screenToGame = ({ x, y }, { camera }) => ({
-  x: (x + camera.x) / camera.zoom,
-  y: (y + camera.y) / camera.zoom,
+  x: ((x - (canvas.width / 2)) / camera.zoom) + camera.x,
+  y: ((y - (canvas.height / 2)) / camera.zoom) + camera.y,
 });

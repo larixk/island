@@ -1,26 +1,25 @@
 import EasyStar from 'easystarjs';
 
 const easystar = new EasyStar.js();
+easystar.enableDiagonals();
+easystar.setIterationsPerCalculation(10000);
 
-export default {
-  findPath: (grid, start, end) => {
-    easystar.setGrid(grid);
-    easystar.setAcceptableTiles([1]);
-    easystar.enableDiagonals();
+export const findPath = (start, end, callback) => {
+  const startX = start.x;
+  const startY = start.y;
+  const endX = end.x;
+  const endY = end.y;
 
-    console.log(start);
-    console.log(end);
+  easystar.findPath(startX, startY, endX, endY, callback);
 
-    const startX = start.x;
-    const startY = start.y;
-    const endX = end.x;
-    const endY = end.y;
+  return easystar;
+};
 
-    return new Promise((resolve) => {
-      easystar.findPath(startX, startY, endX, endY, resolve);
-    });
-  },
-  calculate: () => {
-    easystar.calculate();
-  },
+export const setGrid = (grid) => {
+  easystar.setGrid(grid);
+  easystar.setAcceptableTiles([1]);
+};
+
+export const calculate = () => {
+  easystar.calculate();
 };

@@ -29,8 +29,8 @@ const tick = () => {
   if (playing) {
     const dt = options.msPerUpdate;
     const currentTime = now();
-    while (lastUpdateTime < currentTime) {
-      lastUpdateTime = now();
+    while (lastUpdateTime < currentTime - options.msPerUpdate) {
+      lastUpdateTime += options.msPerUpdate;
       options.state = options.update(options.state, dt, gameControls);
     }
   }
