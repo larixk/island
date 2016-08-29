@@ -5,7 +5,7 @@ import generateInitialState from './initialState';
 import { setGrid, calculate } from './astar';
 import { times } from './util';
 
-const generateAccessbilityGrid = ({ terrain }) => {
+const generateAccessbilityGrid = ({ terrain, entities }) => {
   const grid = times(terrain.length, () => times(terrain.length, () => 0));
   terrain
     .forEach((row, y) => {
@@ -13,6 +13,12 @@ const generateAccessbilityGrid = ({ terrain }) => {
         grid[x][y] = cell.accessible;
       });
     });
+
+  entities.forEach((entity) => {
+    console.log(entity.x, entity.y);
+    grid[entity.y][entity.x] = 0;
+  });
+
   return grid;
 };
 

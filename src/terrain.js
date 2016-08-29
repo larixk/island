@@ -40,7 +40,7 @@ export default (size) => times(
   }).map((type, y) => ({
     x,
     y,
-    accessible: (type === 'water-deep') ? 0 : 1,
+    accessible: (['rock', 'snow', 'water-deep'].includes(type)) ? 0 : 1,
     type,
   }))
 );

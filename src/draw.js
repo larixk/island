@@ -51,6 +51,17 @@ const drawTerrain = (terrain) => {
   terrain.forEach(drawRow);
 };
 
+const drawEntity = (entity) => {
+  const size = 0.5;
+  ctx.fillStyle = '#0f2b07';
+  ctx.fillRect(
+    entity.x - (size / 2),
+    entity.y - (size / 2),
+    size,
+    size
+  );
+};
+
 export const draw = (state) => {
   canvas.width = canvas.width;
   ctx.fillStyle = colors['water-deep'];
@@ -61,6 +72,7 @@ export const draw = (state) => {
   ctx.translate(-state.camera.x, -state.camera.y);
 
   drawTerrain(state.world.terrain);
+  state.world.entities.forEach(drawEntity);
   state.world.agents.forEach(drawAgent);
 
   ctx.restore();

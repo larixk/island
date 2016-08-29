@@ -41,7 +41,5 @@ export default (state) => {
   }
   state.camera.zoom = clamp(state.camera.zoom, 1, 256);
 
-  state.camera.x = state.world.agents[0].x;
-  state.camera.y = state.world.agents[0].y;
   return state;
 };
