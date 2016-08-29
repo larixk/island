@@ -3,7 +3,7 @@ import terrain from './terrain';
 import worker from './worker';
 import tree from './tree';
 
-const worldSize = 512;
+const worldSize = 256;
 
 export default () => {
   const world = {

@@ -16,29 +16,51 @@ const click = throttle((state) => {
   return state;
 }, 500);
 
+let dZoom = 0;
+let dX = 0;
+let dY = 0;
+
 export default (state) => {
   if (isMouseDown()) {
     state = click(state);
   }
   const keyDown = getKeyDown();
   if (keyDown['=']) {
-    state.camera.zoom *= 1.1;
+    dZoom += 0.01;
   }
   if (keyDown['-']) {
-    state.camera.zoom /= 1.1;
+    dZoom -= 0.01;
   }
   if (keyDown.ArrowLeft) {
-    state.camera.x -= 10 / state.camera.zoom;
+    dX -= 0.1;
+    // state.camera.x -= 10 / state.camera.zoom;
   }
   if (keyDown.ArrowRight) {
-    state.camera.x += 10 / state.camera.zoom;
+    dX += 0.1;
+    // state.camera.x += 10 / state.camera.zoom;
   }
   if (keyDown.ArrowUp) {
-    state.camera.y -= 10 / state.camera.zoom;
+    dY -= 0.1;
+    // state.camera.y -= 10 / state.camera.zoom;
   }
   if (keyDown.ArrowDown) {
-    state.camera.y += 10 / state.camera.zoom;
+    dY += 0.1;
+    // state.camera.y += 10 / state.camera.zoom;
   }
+
+  dX *= 0.9;
+  dX = clamp(dX, -1, 1);
+  state.camera.x += (20 * dX) / state.camera.zoom;
+
+  dY *= 0.9;
+  dY = clamp(dY, -1, 1);
+  state.camera.y += (20 * dY) / state.camera.zoom;
+
+  dZoom *= 0.9;
+  dZoom = clamp(dZoom, -2, 2);
+
+  state.camera.zoom *= 1 + dZoom;
+
   state.camera.zoom = clamp(state.camera.zoom, 1, 256);
 
   return state;
