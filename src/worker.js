@@ -59,8 +59,6 @@ function goto({ x, y }) {
         this.route = undefined;
         return;
       }
-      // Remove first element, since that's where we already are.
-      route.shift();
       this.route = route;
     }
   );
