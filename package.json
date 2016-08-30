@@ -21,20 +21,25 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "brfs": "^1.4.3",
     "easystarjs": "^0.3.0",
     "noisejs": "^2.1.0",
-    "simplex-noise": "^2.2.0"
+    "pixi.js": "^4.0.0",
+    "simplex-noise": "^2.2.0",
+    "transform-loader": "^0.2.3"
   },
   "devDependencies": {
+    "babel-core": "^6.11.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "browserify-versionify": "^1.0.6",
     "eslint": "^3.2.2",
     "eslint-config-airbnb": "^10.0.0",
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-import": "^1.12.0",
     "eslint-plugin-jsx-a11y": "^2.0.1",
     "eslint-plugin-react": "^6.0.0",
-    "babel-core": "^6.11.4",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.9.0",
+    "ify-loader": "^1.0.3",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
   }

@@ -1,3 +1,10 @@
+const PIXI = require('pixi.js');
+
+const renderer = new PIXI.WebGLRenderer(800, 600);
+document.body.appendChild(renderer.view);
+
+const stage = new PIXI.Container();
+
 const colors = {
   'water-deep': '#01112a',
   water: '#123c67',
@@ -63,19 +70,21 @@ const drawEntity = (entity) => {
 };
 
 export const draw = (state) => {
-  canvas.width = canvas.width;
-  ctx.fillStyle = colors['water-deep'];
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.save();
-  ctx.translate(canvas.width / 2, canvas.height / 2);
-  ctx.scale(state.camera.zoom, state.camera.zoom);
-  ctx.translate(-state.camera.x, -state.camera.y);
+  renderer.render(stage);
 
-  drawTerrain(state.world.terrain);
-  state.world.entities.forEach(drawEntity);
-  state.world.agents.forEach(drawAgent);
+  // canvas.width = canvas.width;
+  // ctx.fillStyle = colors['water-deep'];
+  // ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // ctx.save();
+  // ctx.translate(canvas.width / 2, canvas.height / 2);
+  // ctx.scale(state.camera.zoom, state.camera.zoom);
+  // ctx.translate(-state.camera.x, -state.camera.y);
 
-  ctx.restore();
+  // drawTerrain(state.world.terrain);
+  // state.world.entities.forEach(drawEntity);
+  // state.world.agents.forEach(drawAgent);
+
+  // ctx.restore();
 };
 
 export const screenToGame = ({ x, y }, { camera }) => ({
