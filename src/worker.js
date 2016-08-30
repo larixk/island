@@ -39,6 +39,7 @@ function update(dt) {
 function goto({ x, y }) {
   const calculationTarget = `${x},${y}`;
   this.route = undefined;
+  this.nextPosition = undefined;
   this.calculating = calculationTarget;
   findPath(
     {
@@ -59,6 +60,7 @@ function goto({ x, y }) {
         this.route = undefined;
         return;
       }
+      route.shift();
       this.route = route;
     }
   );
