@@ -118,6 +118,9 @@ export default (size) => {
     });
 
     Object.keys(smoothing).forEach((type) => {
+      if (type !== 'water') {
+        return;
+      }
       createTileSprite(x, y, `${type}-${smoothing[type]}`);
     });
   }));
