@@ -1,3 +1,4 @@
+import PIXI from 'pixi.js';
 import game from './gameloop';
 import { draw } from './draw';
 import processInput from './processInput';
@@ -15,7 +16,6 @@ const generateAccessbilityGrid = ({ terrain, entities }) => {
     });
 
   entities.forEach((entity) => {
-    console.log(entity.x, entity.y);
     grid[entity.y][entity.x] = 0;
   });
 
@@ -34,14 +34,25 @@ const update = (state, dt) => {
   return newState;
 };
 
+const init = () => {
+  const initialState = generateInitialState();
 
-const initialState = generateInitialState();
+  game({
+    state: initialState,
+    msPerUpdate: 1000 / 30,
+    update,
+    draw,
+  });
 
-game({
-  state: initialState,
-  msPerUpdate: 1000 / 30,
-  update,
-  draw,
-});
+  setGrid(generateAccessbilityGrid(initialState.world));
+};
 
-setGrid(generateAccessbilityGrid(initialState.world));
+PIXI.loader
+  .add('images/water-deep.png')
+  .add('images/water.png')
+  .add('images/grass-high.png')
+  .add('images/grass.png')
+  .add('images/beach.png')
+  .add('images/rock.png')
+  .add('images/snow.png')
+  .load(init);

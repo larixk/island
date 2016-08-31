@@ -61,7 +61,7 @@ export default (state) => {
 
   state.camera.zoom *= 1 + dZoom;
 
-  state.camera.zoom = clamp(state.camera.zoom, 1, 256);
+  state.camera.zoom = clamp(state.camera.zoom, 0.01, 1);
 
   return state;
 };

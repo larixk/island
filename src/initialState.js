@@ -3,7 +3,7 @@ import terrain from './terrain';
 import worker from './worker';
 import tree from './tree';
 
-const worldSize = 256;
+const worldSize = 512;
 
 export default () => {
   const world = {
@@ -30,9 +30,9 @@ export default () => {
     world,
     time: 0,
     camera: {
-      x: worldSize / 2,
-      y: worldSize / 2,
-      zoom: 1,
+      x: 0,
+      y: 19000,
+      zoom: 0.01,
     },
   };
 };
