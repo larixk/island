@@ -48,7 +48,6 @@ const init = () => {
 };
 
 PIXI.loader
-  .add('images/water-deep.png')
   .add('images/water.png')
   .add('images/grass-high.png')
   .add('images/grass.png')
