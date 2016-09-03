@@ -1,5 +1,5 @@
 import { screenToGame } from './draw';
-import { clamp, throttle } from './util';
+import { clamp, throttle, isoToScreen } from './util';
 import { getKeyDown, getMousePosition, isMouseDown } from './input';
 
 const click = throttle((state) => {
@@ -62,6 +62,11 @@ export default (state) => {
   state.camera.zoom *= 1 + dZoom;
 
   state.camera.zoom = clamp(state.camera.zoom, 0.01, 1);
+
+  if(state.world.agents.length) {
+    state.camera.x = isoToScreen(state.world.agents[0]).x;
+    state.camera.y = isoToScreen(state.world.agents[0]).y;
+  }
 
   return state;
 };

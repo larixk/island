@@ -1,26 +1,11 @@
 import PIXI from 'pixi.js';
 import SimplexNoise from 'simplex-noise';
-import { lerp, times } from './util';
+import { lerp, times, isoToScreen, tileW, tileH } from './util';
 import { addToStage } from './draw';
 
 const simplex = new SimplexNoise(Math.random);
 
 const terrainSprite = new PIXI.Container();
-
-const tileW = 128;
-const tileH = 64;
-
-const screenToIso = ({ x, y }) => ({
-  x: (y / tileH) + (x / (2 * tileW)),
-  y: (y / tileH) - (x / (2 * tileW)),
-});
-
-
-const isoToScreen = ({ x, y }) => ({
-  x: (x - y) * (tileW / 2),
-  y: (x + y) * (tileH / 2),
-});
-
 
 const createTileSprite = (x, y, type) => {
   if (type === 'water-deep') {
@@ -48,11 +33,11 @@ export default (size) => {
           Math.pow((size / 2) - x, 2) +
           Math.pow((size / 2) - y, 2)
         ) / size);
-        const noiseMedium = (simplex.noise2D(x / (size * 0.125), y / (size * 0.125)) + 1) / 2;
+        const noiseMedium = (simplex.noise2D(x / (size * 0.1), y / (size * 0.1)) + 1) / 2;
         const noiseSmall = lerp(
-          (simplex.noise2D(x / (size * 0.03), y / (size * 0.03)) + 1) / 2,
+          (simplex.noise2D(x / (size * 0.025), y / (size * 0.025)) + 1) / 2,
           1,
-          0.1
+          0.2
         );
         return Math.pow(distanceFromCenter - 0.25, 4) *
           Math.pow(noise, 2) *
@@ -63,19 +48,19 @@ export default (size) => {
       if (altitude < 0.001) {
         return 'water-deep';
       }
-      if (altitude < 0.0035) {
+      if (altitude < 0.0015) {
         return 'water';
       }
-      if (altitude < 0.0045) {
+      if (altitude < 0.002) {
         return 'beach';
       }
-      if (altitude < 0.015) {
+      if (altitude < 0.008) {
         return 'grass';
       }
-      if (altitude < 0.06) {
+      if (altitude < 0.03) {
         return 'grass-high';
       }
-      if (altitude < 0.09) {
+      if (altitude < 0.07) {
         return 'rock';
       }
       return 'snow';
@@ -88,43 +73,7 @@ export default (size) => {
 
   terrain.forEach((row, x) => row.forEach((cell, y) => {
     createTileSprite(x, y, cell.type);
-
-    const smoothing = {};
-    const neighbours = [
-      { x: x - 1, y },
-      { x: x + 1, y },
-      { x, y: y - 1 },
-      { x, y: y + 1 },
-    ];
-    neighbours.forEach((neighbourCoord, i) => {
-      const neighbourX = neighbourCoord.x;
-      const neighbourY = neighbourCoord.y;
-      if (neighbourY >= terrain.length || neighbourX >= terrain.length) {
-        return;
-      }
-      if (neighbourY < 0 || neighbourX < 0) {
-        return;
-      }
-
-      const neighbour = terrain[neighbourX][neighbourY];
-      const neighbourType = neighbour.type;
-      if (neighbourType === cell.type) {
-        return;
-      }
-      if (!smoothing[neighbourType]) {
-        smoothing[neighbourType] = 0;
-      }
-      smoothing[neighbour.type] += Math.pow(2, i);
-    });
-
-    Object.keys(smoothing).forEach((type) => {
-      if (type !== 'water') {
-        return;
-      }
-      createTileSprite(x, y, `${type}-${smoothing[type]}`);
-    });
   }));
-  // terrainSprite.cacheAsBitmap = true;
   addToStage(terrainSprite);
   return terrain;
 };

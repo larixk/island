@@ -67,6 +67,7 @@ export const draw = ({ camera }) => {
   stage.x = width / 2 - camera.x * camera.zoom;
   stage.y = height / 2 - camera.y * camera.zoom;
   stage.scale.x = stage.scale.y = camera.zoom;
+  stage.children = stage.children.sort((a, b) => a.position.y - b.position.y);
   renderer.render(stage);
 };
 

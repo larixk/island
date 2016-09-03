@@ -1,5 +1,7 @@
-import { lerp } from './util.js';
+import PIXI from 'pixi.js';
+import { addToStage } from './draw';
 import { findPath } from './astar';
+import { isoToScreen, lerp, tileH, rand } from './util';
 
 const distance = (start, end) =>
   Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
@@ -18,6 +20,11 @@ function moveStep(maxDistance) {
   }
 }
 
+function updateSprite() {
+  this.sprite.position = isoToScreen(this);
+  this.sprite.alpha = this.state === 'idle' ? 0.5 : 1;
+}
+
 function update(dt) {
   let state;
   if (this.calculating) {
@@ -31,8 +38,13 @@ function update(dt) {
     this.moveStep(this.maxSpeedPerMs * dt);
   } else {
     state = 'idle';
+    this.goto({
+      x: Math.random() * this.world.terrain.length,
+      y: Math.random() * this.world.terrain.length,
+    });
   }
   this.state = state;
+  this.updateSprite();
   return this;
 }
 
@@ -66,12 +78,29 @@ function goto({ x, y }) {
   );
 }
 
-export default (options) => Object.assign({
-  hp: 100,
-  x: 0,
-  y: 0,
-  maxSpeedPerMs: 0.001,
-  update,
-  goto,
-  moveStep,
-}, options);
+export default (options) => {
+  const worker = Object.assign({
+    hp: 100,
+    x: 0,
+    y: 0,
+    maxSpeedPerMs: 0.001,
+    update,
+    updateSprite,
+    goto,
+    moveStep,
+  }, options);
+
+  if (worker.world.accessibility[worker.y][worker.x] === 0) {
+    return null;
+  }
+
+  const resourceKey = 'images/snow.png';
+  const sprite = new PIXI.Sprite(PIXI.loader.resources[resourceKey].texture);
+  const screenCoords = isoToScreen({ x: worker.x, y: worker.y });
+  sprite.x = screenCoords.x;
+  sprite.y = screenCoords.y - sprite.height + tileH;
+  addToStage(sprite);
+  worker.sprite = sprite;
+
+  return worker;
+};
