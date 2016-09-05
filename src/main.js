@@ -12,6 +12,8 @@ const update = (state, dt) => {
   newState.world.agents = newState.world.agents
     .map((agent) => agent.update(dt))
     .filter(checkHpAgent);
+  newState.world.entities
+    .forEach((entity) => entity.update(dt));
   newState.time += dt / 1000;
   calculate();
   return newState;
@@ -22,14 +24,16 @@ const init = () => {
 
   game({
     state: initialState,
-    msPerUpdate: 1000 / 30,
+    msPerUpdate: 1000 / 60,
     update,
     draw,
   });
 };
 
 PIXI.loader
-  .add('images/tree.png')
+  .add('images/tree-0.png')
+  .add('images/tree-1.png')
+  .add('images/tree-2.png')
   .add('images/water.png')
   .add('images/beach-0.png')
   .add('images/beach-1.png')

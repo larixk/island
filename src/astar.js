@@ -1,8 +1,8 @@
 import EasyStar from 'easystarjs';
 
 const easystar = new EasyStar.js();
+easystar.setIterationsPerCalculation(1000);
 easystar.enableDiagonals();
-easystar.setIterationsPerCalculation(10000);
 
 export const findPath = (start, end, callback) => {
   const startX = start.x;
@@ -10,7 +10,7 @@ export const findPath = (start, end, callback) => {
   const endX = end.x;
   const endY = end.y;
 
-  easystar.findPath(startX, startY, endX, endY, callback);
+  easystar.findPath(startX, startY, endX, endY, callback, true);
 
   return easystar;
 };

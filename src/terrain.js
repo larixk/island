@@ -14,6 +14,8 @@ const createTileSprite = (x, y, type) => {
   const resourceKey = `images/${type}.png`;
   const sprite = new PIXI.Sprite(PIXI.loader.resources[resourceKey].texture);
   const screenCoords = isoToScreen({ x, y });
+  sprite.anchor.x = 0.5;
+  sprite.anchor.y = 1;
   sprite.x = screenCoords.x;
   sprite.y = screenCoords.y;
   sprite.width = tileW;
@@ -45,34 +47,31 @@ export default (size) => {
           noiseSmall;
       }
     ).map((altitude) => {
-      if (altitude < 0.001) {
+      if (altitude < 0.0009) {
         return 'water-deep';
       }
-      if (altitude < 0.0015) {
+      if (altitude < 0.0025) {
         return 'water';
       }
-      if (altitude < 0.002) {
+      if (altitude < 0.0035) {
         return 'beach';
       }
-      if (altitude < 0.008) {
+      if (altitude < 0.01) {
         return 'grass';
       }
-      if (altitude < 0.03) {
+      if (altitude < 0.08) {
         return 'grass-high';
       }
-      if (altitude < 0.07) {
-        return 'rock';
-      }
-      return 'snow';
+      return 'rock';
     }).map((type, y) => ({
       x,
       y,
-      accessible: (['rock', 'snow', 'water-deep'].includes(type)) ? 0 : 1,
+      accessible: (['rock', 'water-deep'].includes(type)) ? 0 : 1,
       type,
     })));
 
   terrain.forEach((row, x) => row.forEach((cell, y) => {
-    createTileSprite(x, y, cell.type);
+    cell.sprite = createTileSprite(x, y, cell.type);
   }));
   addToStage(terrainSprite);
   return terrain;

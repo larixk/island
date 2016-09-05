@@ -57,6 +57,8 @@ const stage = new PIXI.Container();
 //   );
 // };
 
+export const getSize = () => ({ width, height });
+
 export const addToStage = (child) => {
   // stage.cacheAsBitmap = false;
   stage.addChild(child);
@@ -70,8 +72,3 @@ export const draw = ({ camera }) => {
   stage.children = stage.children.sort((a, b) => a.position.y - b.position.y);
   renderer.render(stage);
 };
-
-export const screenToGame = ({ x, y }, { camera }) => ({
-  x: ((x - (width / 2)) / camera.zoom) + camera.x,
-  y: ((y - (height / 2)) / camera.zoom) + camera.y,
-});

@@ -22,7 +22,7 @@ function moveStep(maxDistance) {
 
 function updateSprite() {
   this.sprite.position = isoToScreen(this);
-  this.sprite.alpha = this.state === 'idle' ? 0.5 : 1;
+  this.sprite.alpha = this.state === 'idle' ? 0.05 : 1;
 }
 
 function update(dt) {
@@ -36,12 +36,19 @@ function update(dt) {
     state = 'walking';
     this.nextPosition = this.route.shift();
     this.moveStep(this.maxSpeedPerMs * dt);
+  } else if (this.job) {
+    state = 'working';
+    this.job.wp -= dt * 0.001;
+    if (this.job.wp <= 0) {
+      this.job = null;
+    }
   } else {
     state = 'idle';
-    this.goto({
-      x: Math.random() * this.world.terrain.length,
-      y: Math.random() * this.world.terrain.length,
-    });
+    const job = this.world.findJob(this);
+    if (job) {
+      this.job = job;
+      this.goto(job.location);
+    }
   }
   this.state = state;
   this.updateSprite();
@@ -83,7 +90,7 @@ export default (options) => {
     hp: 100,
     x: 0,
     y: 0,
-    maxSpeedPerMs: 0.001,
+    maxSpeedPerMs: 0.003,
     update,
     updateSprite,
     goto,
@@ -91,16 +98,16 @@ export default (options) => {
   }, options);
 
   if (worker.world.accessibility[worker.y][worker.x] === 0) {
-    return null;
+    return;
   }
 
   const resourceKey = 'images/snow.png';
   const sprite = new PIXI.Sprite(PIXI.loader.resources[resourceKey].texture);
-  const screenCoords = isoToScreen({ x: worker.x, y: worker.y });
-  sprite.x = screenCoords.x;
-  sprite.y = screenCoords.y - sprite.height + tileH;
+  sprite.anchor.x = 0.5;
+  sprite.anchor.y = 1;
   addToStage(sprite);
   worker.sprite = sprite;
+  worker.updateSprite();
 
-  return worker;
+  worker.world.agents.push(worker);
 };

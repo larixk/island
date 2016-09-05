@@ -1,3 +1,5 @@
+import { getSize } from './draw';
+
 export const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
 export const lerp = (a, b, t) => a + (t * (b - a));
@@ -32,10 +34,32 @@ export const times = (n, f) => {
 export const tileW = 128;
 export const tileH = 64;
 
-export const screenToIso = ({ x, y }) => ({
-  x: (y / tileH) + (x / (2 * tileW)),
-  y: (y / tileH) - (x / (2 * tileW)),
-});
+export const screenToIso = ({ x, y }, camera) => {
+  const { width, height } = getSize();
+  if (!width) {
+    return null;
+  }
+  if (!height) {
+    return null;
+  }
+  if (!camera) {
+    return null;
+  }
+
+  x -= width / 2;
+  y -= height / 2;
+
+  x += camera.x * camera.zoom;
+  y += camera.y * camera.zoom;
+
+  x /= camera.zoom;
+  y /= camera.zoom;
+
+  return {
+    x: Math.ceil((y / tileH) + (x / (tileW))),
+    y: Math.ceil((y / tileH) - (x / (tileW))),
+  };
+};
 
 export const isoToScreen = ({ x, y }) => ({
   x: (x - y) * (tileW / 2),
@@ -45,9 +69,9 @@ export const isoToScreen = ({ x, y }) => ({
 export const generateAccessbilityGrid = ({ terrain, entities }) => {
   const grid = times(terrain.length, () => times(terrain.length, () => 0));
   terrain
-    .forEach((row, y) => {
-      row.forEach((cell, x) => {
-        grid[x][y] = cell.accessible;
+    .forEach((row, x) => {
+      row.forEach((cell, y) => {
+        grid[y][x] = cell.accessible;
       });
     });
 

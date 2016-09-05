@@ -5,6 +5,7 @@ let lastUpdateTime;
 
 const defaults = {
   msPerUpdate: 10,
+  maxTicks: 5,
   update: noop,
   draw: noop,
 };
@@ -29,6 +30,7 @@ const tick = () => {
   if (playing) {
     const dt = options.msPerUpdate;
     const currentTime = now();
+    lastUpdateTime = Math.max(lastUpdateTime, currentTime - (options.maxTicks * dt));
     while (lastUpdateTime < currentTime - options.msPerUpdate) {
       lastUpdateTime += options.msPerUpdate;
       options.state = options.update(options.state, dt, gameControls);
